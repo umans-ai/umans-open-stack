@@ -1,9 +1,9 @@
 # Test report
 
-Tool:
+Harness:
 Version or commit:
-Model:
-Endpoint:
+Model (umans ID):
+Route (Anthropic or OpenAI):
 Works:
 Broken:
 Not tested:

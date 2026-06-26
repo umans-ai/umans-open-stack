@@ -1,0 +1,63 @@
+// Starter cloud-agent manifest. Copy this to .devcontainer/devcontainer.json
+// (or .umans/agent.jsonc) in your public repo and fill in the blanks.
+//
+// A manifest is a standard devcontainer. Generic devcontainer tools read the
+// top level; umans reads "customizations.umans". See ../agents/reference.md
+// for every field, and ../agents/examples/opencode.devcontainer.jsonc for a
+// worked example.
+{
+  // Base image to start from, plus any devcontainer features and lifecycle
+  // hooks that install and start your app.
+  "image": "ghcr.io/umans/agent-base:latest",
+  // "features": { },
+  // "onCreateCommand": "git clone ... && cd ... && <build>",
+  // "postStartCommand": "<start your app on a port>",
+
+  "customizations": {
+    "umans": {
+      "schemaVersion": 1,
+
+      // "container" runs your devcontainer on the box (default for community
+      // agents). "host" is reserved for reviewed agents.
+      "target": "container",
+
+      // Credit yourself. kind is "community" (a person) or "org".
+      "attribution": {
+        "kind": "community",
+        "by": "your-handle",
+        "repo": "https://github.com/you/your-agent"
+      },
+
+      // How the agent reaches inference. Pick a model from
+      // ../reference/models.md, or use "byok" to bring your own key.
+      "runtime": { "provider": "umans", "model": "umans-coder" },
+
+      // What the launcher must provide before boot (consent-gated). Drop any
+      // you do not need.
+      "requires": {
+        "git": false,
+        "secrets": []
+      },
+
+      // Which harness rules files get the box briefing. Omit to write all
+      // known ones (opencode, claude-code, pi).
+      // "context": { "runtimes": ["opencode"] },
+
+      // The surfaces your box exposes. Exactly one is "main".
+      "entries": [
+        {
+          "id": "app",
+          "label": "Your app",
+          "main": true,
+          "kind": "web",
+          "port": 3000,
+          "health": "/",
+          "auth": "umans",
+          "visibility": "private"
+        }
+        // ,{ "id": "terminal", "label": "Terminal", "kind": "terminal",
+        //    "command": "tmux new -A -s main", "auth": "umans" }
+      ]
+    }
+  }
+}

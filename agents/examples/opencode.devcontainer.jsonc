@@ -1,0 +1,55 @@
+// Worked example: the opencode reference manifest.
+//
+// This is the first-party config behind the browser IDE you get today. It is
+// the simplest real manifest: one web entry as the front door, plus a
+// terminal. Use it as a shape to copy. Community agents usually set
+// "target": "container" (see ../reference.md); opencode runs first-party on
+// the box, so it uses "host".
+//
+// A manifest is a standard devcontainer. Generic devcontainer tools read the
+// top level and ignore "customizations.umans"; umans reads the umans block.
+{
+  "image": "ghcr.io/umans/agent-base:latest",
+
+  "customizations": {
+    "umans": {
+      "schemaVersion": 1,
+
+      // host: runs on the box directly (reviewed / first-party agents).
+      // Community agents use "container" to run their own devcontainer.
+      "target": "host",
+
+      "attribution": { "kind": "first-party" },
+
+      // How the agent reaches inference. Pick a model ID from
+      // ../../reference/models.md, or use "byok" to bring your own key.
+      "runtime": { "provider": "umans", "model": "umans-coder" },
+
+      // Omitting "context" writes the box house rules to all known harness
+      // rules files (opencode, claude-code, pi). Set it to narrow the list:
+      //   "context": { "runtimes": ["opencode"] }
+
+      // The surfaces this box exposes. Exactly one is "main".
+      "entries": [
+        {
+          "id": "opencode",
+          "label": "opencode UI",
+          "main": true,
+          "kind": "web",
+          "port": 39193,
+          "health": "/",
+          "auth": "basic",
+          "visibility": "private"
+        },
+        {
+          "id": "terminal",
+          "label": "Terminal",
+          "kind": "terminal",
+          "command": "tmux new -A -s main",
+          "auth": "umans",
+          "visibility": "private"
+        }
+      ]
+    }
+  }
+}

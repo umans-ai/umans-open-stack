@@ -1,23 +1,23 @@
 ---
 name: Test report
-about: Share results of testing a tool with Umans
-title: "[Test] <tool name>"
+about: Share results of testing a harness or model with umans
+title: "[Test] <harness or model>"
 labels: ["test-report"]
 ---
 
 # Test report
 
-## Tool
+## Harness
 
 Name:
 
 Version or commit:
 
-## Umans setup
+## umans setup
 
-Model:
+Model (umans ID):
 
-Endpoint type:
+Route (Anthropic or OpenAI):
 
 ## Results
 

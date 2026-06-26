@@ -1,63 +1,52 @@
 # Contributing
 
-Thanks for helping us build the Umans Open Stack.
+Thanks for helping build the Umans Open Stack.
 
-You do not need to write code to contribute.
+You do not need to write code to contribute. The most valuable thing you can share is a
+config that worked, with enough detail that someone else can reproduce it.
 
-Useful contributions include:
+## Three ways to contribute
 
-- Suggesting an open source tool
-- Testing a tool with Umans
-- Sharing a working config
-- Reporting what broke
-- Improving a recipe
-- Comparing tools
-- Asking for a hosted beta
+1. **Share a working config (a playbook).** You found a setting that keeps your harness
+   within concurrency limits, a way to wire vision handoff, a caching setup that cut your
+   token bill, or a workflow worth repeating. Copy [`templates/playbook.md`](templates/playbook.md),
+   fill it in, and open a pull request under `playbooks/`, or open a
+   [share-a-config issue](.github/ISSUE_TEMPLATE/share-a-config.md).
+2. **Add an agent to the index.** You packaged an agent as a declarative manifest in a
+   public repo. Add a row to [`agents/index.md`](agents/index.md) and open a pull request,
+   or open an [add-your-agent issue](.github/ISSUE_TEMPLATE/add-your-agent.md). See
+   [`agents/README.md`](agents/README.md) for what a manifest is.
+3. **Report what worked or broke.** Tried a harness or model against umans and have
+   results? Use the [test report](.github/ISSUE_TEMPLATE/test-report.md) format.
 
-## Contribution flow
+## Maturity labels
 
-1. Start with a Discord post in the `projects` forum: https://discord.gg/Q5hdNrk7Rw
-2. People test and comment there.
-3. Once something useful emerges, we turn it into a GitHub issue or recipe.
-4. When a recipe is stable enough, we mark it as documented.
-5. If enough people want it, Umans may host it as beta.
+Mark each contribution so readers know how much to trust it:
+
+- **Draft**: shared, not yet confirmed by anyone else.
+- **Tested**: you got it working for a real task.
+- **Verified**: reproduced by more than one person.
+
+A config can graduate. If you reproduce someone else's Draft, say so and bump it to Tested.
 
 ## Discord vs GitHub
 
-Discord is for discussion, raw tests, screenshots, errors, ideas.
+Discord is for discussion, raw tests, screenshots, errors, and ideas. GitHub is for clean,
+reproducible configs and long-term documentation.
 
-GitHub is for clean recipes, reproducible configs, and long-term documentation.
+If a discussion already exists on Discord, link to it instead of rewriting everything.
 
-Please do not duplicate work. If a discussion already exists on Discord, link to it instead of rewriting everything.
+[Join the Umans Discord](https://discord.gg/Q5hdNrk7Rw)
 
-## Test report format
+## What makes a good contribution
 
-```txt
-Tool:
-Version or commit:
-Model:
-Endpoint:
-Works:
-Broken:
-Not tested:
-Config:
-Notes:
-```
-
-## What we look for
-
-A good tool should be:
-
-- Open source
-- Useful for developers or AI workflows
-- Compatible with OpenAI-compatible APIs, Anthropic-compatible APIs, or easy to adapt
-- Self-hostable when possible
-- Maintained enough to be worth testing
-- Not locked to a single provider
+- Reproducible: someone with the same harness can follow it and get the same result.
+- Portable when possible: standard tools, standard formats, no fragile hacks.
+- Specific: name the harness, the model ID, the exact setting you changed.
+- Honest about limits: say what you did not test.
 
 ## What we avoid
 
-- Closed tools with no portability
-- Random promotion unrelated to the community
-- Tools that require fragile hacks to work
-- Duplicated threads for the same project
+- Configs that only work through a fragile, undocumented hack.
+- Promotion unrelated to the community.
+- Duplicated threads for the same project.

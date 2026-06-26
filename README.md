@@ -3,66 +3,60 @@
 [![Discord](https://img.shields.io/badge/Discord-Join%20the%20community-5865F2?logo=discord&logoColor=white)](https://discord.gg/Q5hdNrk7Rw)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Umans Open Stack is a curated set of open source tools that work well with Umans.
+A community knowledge base for getting the most out of umans across coding harnesses.
 
-The goal is simple: help the community spot, test, document, and sometimes host open tools around open inference.
+The goal is simple: collect the configs and patterns that actually work, so the next
+person does not have to rediscover them. How to stay within concurrency limits in your
+harness. How to hand an image to a vision-capable model and feed the result back to a
+text-only one. How to get more cache hits. How to package an agent so anyone can launch
+it in one click.
 
-We do not want Umans-only tools.
+Everything here stays portable. The harnesses are standard tools and the formats are
+standard formats (devcontainers, OpenAI-compatible and Anthropic-compatible APIs). You
+should be able to use these configs with umans, self-host the tool, or point it at
+another provider when that makes sense.
 
-Everything listed here should stay portable. You should be able to use it with Umans, self-host it, or use another inference provider when possible.
+## What you will find
 
-## What we track
+- **[Agents](agents/)**: share a cloud-agent config (a declarative manifest that makes an
+  agent launchable in one click) and find others in the [index](agents/index.md).
+- **[Playbooks](playbooks/)**: working configs the community has tried.
+  [Concurrency](playbooks/concurrency.md), [vision handoff](playbooks/vision-handoff.md),
+  [caching](playbooks/caching.md), and [workflows](playbooks/workflows.md).
+- **[Reference](reference/)**: the facts a harness needs. The
+  [API surface](reference/api.md), the [models](reference/models.md), and how to
+  [connect each harness](reference/harnesses.md).
 
-- Chat apps
-- Design tools
-- Cowork and desktop agent apps
-- Remote agent sessions
-- Execution environments
-- Developer tools around Umans
+## Quick start
 
-## Status
+Point any harness at the umans API. The endpoint speaks both the OpenAI-compatible and the
+Anthropic-compatible shape, so most tools work with two environment variables. See
+[reference/api.md](reference/api.md) for the base URL, how to create a key, and the model
+IDs you can select.
 
-Each tool can move through these stages:
+Then pick a playbook for the thing you are trying to do, and tune the per-harness section
+for your tool.
 
-| Status | Meaning |
+## Maturity
+
+Configs and agents here carry a label so you know how much to trust them:
+
+| Label | Meaning |
 |---|---|
-| Spotted | Someone found the tool and thinks it is relevant |
-| Testing | People are testing it with Umans |
-| Tested | It works for at least one useful workflow |
-| Documented | A working recipe exists |
-| Hosted beta | Umans provides a hosted version or managed setup |
-| Official | Maintained or directly supported by Umans |
-
-## Principles
-
-- Open first
-- Portable by default
-- No lock-in
-- Works with existing developer tools
-- Useful with Umans, but not dependent on Umans
-- Community testing before hosting
-
-## Current recipes
-
-- [Open WebUI](recipes/open-webui/README.md)
-- [LibreChat](recipes/librechat/README.md)
-- [Open Design](recipes/open-design/README.md)
-
-## Radar
-
-- [Chat apps](radar/chat-apps.md)
-- [Design tools](radar/design-tools.md)
-- [Cowork apps](radar/cowork-apps.md)
-- [Agent sessions](radar/agent-sessions.md)
+| Draft | Shared, not yet confirmed by anyone else |
+| Tested | One person got it working for a real task |
+| Verified | Reproduced by more than one person |
 
 ## Community
 
-Discussion, raw tests, screenshots, and ideas happen on Discord. Clean recipes and configs live here on GitHub.
+Discussion, raw tests, screenshots, and ideas happen on Discord. Clean, reproducible
+configs live here on GitHub.
 
 [Join the Umans Discord](https://discord.gg/Q5hdNrk7Rw)
 
 ## Contribute
 
-The easiest way to contribute is to test a tool and share what worked, what broke, and which model you used.
+The most useful thing you can do is share a config that worked: which harness, which
+model, what you changed, and what the result was. You do not need to write code.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
