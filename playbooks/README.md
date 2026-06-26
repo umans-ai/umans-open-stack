@@ -4,6 +4,7 @@ Working configs the community has tried, one topic per file. Each playbook expla
 thing once, then carries a per-harness table you can read for your tool or add a row to.
 
 - [Concurrency](concurrency.md): stay within your in-flight request limit.
+- [Images](images.md): stay under the 10-image limit by swapping old images for a description.
 - [Vision handoff](vision-handoff.md): use a text-only model on an image by routing the
   image to a vision-capable model first.
 - [Caching](caching.md): get more cache hits and a lower token bill.

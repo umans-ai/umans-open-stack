@@ -5,7 +5,9 @@
 Some umans models read images, some are text-only. When you want to use a text-only setup
 on a task that involves an image (a screenshot, a diagram, a design), you route the image
 step to a vision-capable model, get a text description back, and feed that text to your
-text-only model. The rest of the work continues on the model you wanted.
+text-only model. The rest of the work continues on the model you wanted. The same step
+also keeps long conversations under the [10-image limit](images.md), by swapping an aging
+image for its description.
 
 ## Which models read images
 

@@ -21,8 +21,9 @@ another provider when that makes sense.
 - **[Agents](agents/)**: share a cloud-agent config (a declarative manifest that makes an
   agent launchable in one click) and find others in the [index](agents/index.md).
 - **[Playbooks](playbooks/)**: working configs the community has tried.
-  [Concurrency](playbooks/concurrency.md), [vision handoff](playbooks/vision-handoff.md),
-  [caching](playbooks/caching.md), and [workflows](playbooks/workflows.md).
+  [Concurrency](playbooks/concurrency.md), [images](playbooks/images.md),
+  [vision handoff](playbooks/vision-handoff.md), [caching](playbooks/caching.md), and
+  [workflows](playbooks/workflows.md).
 - **[Reference](reference/)**: the facts a harness needs. The
   [API surface](reference/api.md), the [models](reference/models.md), and how to
   [connect each harness](reference/harnesses.md).
