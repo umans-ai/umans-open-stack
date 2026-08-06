@@ -41,6 +41,9 @@ what the agent does, and which surface is `main`.
 
 ## Where this is today
 
-Cloud agents are in early access. opencode is the live, launchable harness today; more are
-arriving. If your agent is not launchable yet, the index still lists it so people can find
-the repo and follow along.
+Cloud agents are in early access. opencode is the live, launchable harness today, and
+[Open Design](https://github.com/nexu-io/open-design) is in an operator preview (it
+launches for umans operators while we validate it — see
+[examples/open-design.devcontainer.jsonc](examples/open-design.devcontainer.jsonc) for
+the first `run`-block agent: one published image, four entries). If your agent is not
+launchable yet, the index still lists it so people can find the repo and follow along.

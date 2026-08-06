@@ -1,0 +1,119 @@
+// Worked example: the Open Design cloud agent.
+//
+// Open Design (https://github.com/nexu-io/open-design) is the open-source
+// design studio for prototypes, slides, images, and video. On umans it is a
+// one-click box: the studio is the front door, and the coding surfaces
+// (opencode IDE, a Pi session, a plain terminal) ride along as siblings for
+// hand-edits and prompt work.
+//
+// This is the first org agent packaged on the `run` block: instead of a
+// full devcontainer build, the platform runs Open Design's published image
+// on the box and routes the bare host to it. Generic devcontainer tools
+// read the top level and ignore "customizations.umans"; umans reads the
+// umans block.
+{
+  // Kept for forward-compat with the devcontainer consumption roadmap;
+  // the pilot's runtime image is the `run.image` below (the same one).
+  "image": "ghcr.io/nexu-io/od:latest",
+
+  "customizations": {
+    "umans": {
+      "schemaVersion": 1,
+
+      // container: the app runs as a Docker container on the box (the
+      // default for community + org agents). The port lands on loopback,
+      // nginx + the umans proxy are the only way in.
+      "target": "container",
+
+      "attribution": {
+        "kind": "org",
+        "from": "Nexu",
+        "repo": "https://github.com/nexu-io/open-design"
+      },
+
+      // How the agent reaches inference. The studio speaks
+      // OpenAI-compatible BYOK; the box's gateway key plugs straight in
+      // (one-time setup, see "notes" below).
+      "runtime": { "provider": "umans", "model": "umans-coder" },
+
+      // The RC-7 v1 slice: run ONE published image on the box. cloud-init
+      // renders a hardened docker-compose (read-only root, tmpfs, no-new-
+      // privileges, mem/pids caps) + a systemd unit from this block.
+      "run": {
+        "image": "ghcr.io/nexu-io/od:latest",
+        "env": {
+          // The umans agent-proxy is the auth perimeter (it validates the
+          // umans session before any traffic reaches the box). Upstream
+          // blesses this escape hatch for exactly this deployment shape.
+          "OD_DISABLE_API_AUTH": "1",
+          // The studio's /api rejects browser origins it doesn't know;
+          // the box's bare host is the front door. ${UMANS_AGENT_NAME}
+          // interpolates to the agent name at launch.
+          "OPEN_DESIGN_ALLOWED_ORIGINS": "https://${UMANS_AGENT_NAME}.agents.umans.ai",
+          // The daemon must listen on all container interfaces for the
+          // loopback publish to reach it.
+          "OD_BIND_HOST": "0.0.0.0"
+        },
+        // Studio state (projects, settings, your BYOK choice) survives
+        // restarts here. A box recreate starts fresh, like every box.
+        "volume": "open_design_data:/app/.od"
+      },
+
+      // Agent-specific house-rules lines: appended to the box context
+      // every runtime on the box reads, so the coding agent can walk you
+      // through the one-time inference wiring.
+      "notes": [
+        "Open Design reaches inference through a BYOK provider you add once.",
+        "In the studio, open Settings and add an OpenAI-compatible provider:",
+        "base URL https://api.code.umans.ai, API key = this box's gateway key",
+        "(run `echo $UMANS_API_KEY` in the terminal, or see ~/.umans/config.json),",
+        "model umans-coder. The choice persists across studio restarts."
+      ],
+
+      // The surfaces this box exposes. Exactly one is "main" — the studio,
+      // so the Open agent button opens design work directly. The coding
+      // surfaces are one click away on their numeric URLs.
+      "entries": [
+        {
+          "id": "design",
+          "label": "Open Design",
+          "main": true,
+          "kind": "web",
+          "port": 7456,
+          "health": "/api/health",
+          "auth": "umans",
+          "visibility": "private"
+        },
+        {
+          "id": "opencode",
+          "label": "opencode UI",
+          "kind": "web",
+          "port": 39193,
+          "health": "/",
+          "auth": "basic",
+          "visibility": "private"
+        },
+        {
+          "id": "terminal",
+          "label": "Terminal",
+          "kind": "terminal",
+          "port": 7681,
+          "command": "tmux new -A -s main",
+          "auth": "umans",
+          "visibility": "private"
+        },
+        {
+          "id": "pi",
+          "label": "Pi (CLI)",
+          "kind": "terminal",
+          "port": 7682,
+          // A login shell so UMANS_API_KEY (exported via /etc/profile.d)
+          // is set before Pi starts; on Pi exit the session drops to bash.
+          "command": "tmux new-session -A -s pi 'bash -lc \"pi; exec bash\"'",
+          "auth": "umans",
+          "visibility": "private"
+        }
+      ]
+    }
+  }
+}

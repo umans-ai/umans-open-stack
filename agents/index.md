@@ -4,11 +4,15 @@ Cloud agents the community has packaged as a declarative manifest. Each links to
 repo you can read, fork, and launch.
 
 Cloud agents are in early access. A row can be listed here before it is launchable, so
-people can find the repo and follow along.
+people can find the repo and follow along. Open Design is currently in an operator
+preview: it launches for umans operators while we validate it, and opens to everyone
+once validated (the config below already works — see its
+[example manifest](examples/open-design.devcontainer.jsonc)).
 
 | Agent | By | Repo | Main surface | Maturity |
 |---|---|---|---|---|
 | opencode UI | umans (first-party) | first-party | Browser IDE | Verified |
+| Open Design | [Nexu](https://github.com/nexu-io) | <https://github.com/nexu-io/open-design> | Design studio web UI (with opencode, Pi, and terminal siblings) | Tested |
 
 ## Add yours
 
