@@ -9,6 +9,8 @@ thing once, then carries a per-harness table you can read for your tool or add a
   image to a vision-capable model first.
 - [Caching](caching.md): get more cache hits and a lower token bill.
 - [Workflows](workflows.md): repeatable multi-step recipes.
+- [Open Design](open-design.md): run the open-source design studio as a umans
+  cloud agent, wired to umans inference (the integration contract + zero-touch).
 
 ## Maturity
 
