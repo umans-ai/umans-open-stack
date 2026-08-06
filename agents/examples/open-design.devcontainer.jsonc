@@ -55,22 +55,44 @@
           "OD_ALLOWED_ORIGINS": "https://${UMANS_AGENT_NAME}.agents.umans.ai",
           // The daemon must listen on all container interfaces for the
           // loopback publish to reach it.
-          "OD_BIND_HOST": "0.0.0.0"
+          "OD_BIND_HOST": "0.0.0.0",
+          // opencode's writable dirs: the vendor image's home is read-only
+          // under the hardened compose, so XDG points at the writable tmpfs.
+          "XDG_CONFIG_HOME": "/tmp/xdg/config",
+          "XDG_DATA_HOME": "/tmp/xdg/data",
+          "XDG_CACHE_HOME": "/tmp/xdg/cache",
+          "XDG_STATE_HOME": "/tmp/xdg/state"
         },
         // Studio state (projects, settings, your BYOK choice) survives
         // restarts here. A box recreate starts fresh, like every box.
-        "volume": "open_design_data:/app/.od"
+        "volume": "open_design_data:/app/.od",
+        // The vendor image ships NO agent binaries (its design runs fail
+        // AGENT_UNAVAILABLE without one). Install opencode-cli — the runtime
+        // behind the studio's BYOK OpenCode agent — pinned + sha256-verified.
+        // Proven end-to-end: a byok-opencode run against the umans gateway
+        // generated a real artifact (see playbooks/open-design.md).
+        "runtimes": [
+          {
+            "name": "opencode",
+            "url": "https://github.com/anomalyco/opencode/releases/download/v1.18.14/opencode-linux-x64-musl.tar.gz",
+            "sha256": "2ef42702c08c1f9baedb5f4618aaa6d8fd9ac09614e577df06731e7f3da3ba84",
+            "archivePath": "opencode",
+            // A directory the vendor daemon's agent scan probes.
+            "dest": "/home/open-design/.local/bin/opencode-cli"
+          }
+        ]
       },
 
       // Agent-specific house-rules lines: appended to the box context
       // every runtime on the box reads, so the coding agent can walk you
       // through the one-time inference wiring.
       "notes": [
-        "Open Design reaches inference through a BYOK provider you add once.",
-        "In the studio, open Settings and add an OpenAI-compatible provider:",
-        "base URL https://api.code.umans.ai, API key = this box's gateway key",
-        "(run `echo $UMANS_API_KEY` in the terminal, or see ~/.umans/config.json),",
-        "model umans-coder. The choice persists across studio restarts."
+        "Open Design generates via its BYOK OpenCode runtime against the umans",
+        "gateway (opencode-cli is pre-installed in the studio container). One",
+        "time: in the studio Settings (API providers), add a custom provider —",
+        "type OpenAI-compatible, base URL https://api.code.umans.ai/v1 (the /v1",
+        "matters), API key = this box's gateway key (`echo $UMANS_API_KEY` in",
+        "the terminal), model umans-coder."
       ],
 
       // The surfaces this box exposes. Exactly one is "main" — the studio,

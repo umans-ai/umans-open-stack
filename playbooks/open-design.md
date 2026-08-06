@@ -31,15 +31,22 @@ allowed". Set the daemon var to the box's bare origin:
 OD_ALLOWED_ORIGINS=https://<agent-name>.agents.umans.ai
 ```
 
-## Gotcha 2 — no local CLIs in the container
+## Gotcha 2 — the vendor image ships no agent runtime at all
 
-The onboarding "CLI local" tab scans PATH **inside the container**. The umans
-box's baked CLIs (claude, opencode, pi) live on the *host*, and the
-`ghcr.io/nexu-io/od` image ships none. So "no agent detected" is expected,
-and mounting host binaries in is deliberately avoided (it would hand the
-vendor image the host's toolchain and the box's credentials for no robustness
-win). Inference goes through the **API providers** path instead — which is
-also the one that keeps traffic on the gateway's audit + rate-limit rails.
+Bigger than "no local CLIs detected": the `ghcr.io/nexu-io/od` image contains
+**no agent binaries**, and every studio design generation is a run that
+spawns one (`AGENT_UNAVAILABLE` without it — reproduced locally on the
+official image). The fix that makes the studio actually work in Docker is
+installing **opencode-cli** (the binary behind the studio's BYOK OpenCode
+runtime) into the container, pinned and sha256-verified, mounted where the
+daemon's agent scan probes (`/home/open-design/.local/bin`), with opencode's
+XDG dirs pointed at the writable tmpfs (`XDG_*_HOME=/tmp/xdg/*`). The umans
+manifest does this for you via the `run.runtimes` block — see the
+[example manifest](../agents/examples/open-design.devcontainer.jsonc).
+Proven end-to-end: a `byok-opencode` run against the umans gateway produced a
+real artifact. Mounting the *host's* baked CLIs in is deliberately avoided —
+it would hand the vendor image the host's toolchain and credentials for no
+robustness win.
 
 ## Gotcha 3 — the chat BYOK config is browser-side
 
@@ -51,16 +58,17 @@ opens unconfigured until one of the two zero-touch paths below lands.
 
 ## Wiring umans inference manually (today, 30 seconds, once)
 
-1. Open the studio → Settings → *Fournisseurs d'API* (API providers) →
-   *Fournisseur personnalisé* (custom provider).
-2. Base URL: `https://api.code.umans.ai` — protocol Anthropic-compatible or
-   OpenAI-compatible, both are first-class on the gateway.
+1. Open the studio → Settings → API providers → custom provider.
+2. Provider type **OpenAI-compatible**, base URL
+   **`https://api.code.umans.ai/v1`** — the `/v1` matters: opencode appends
+   `/chat/completions` to whatever you give it.
 3. API key: the box's gateway key. On the box (Terminal entry):
    `echo $UMANS_API_KEY` — or read `~/.umans/config.json`.
 4. Model: `umans-coder` (see [../reference/models.md](../reference/models.md)).
 5. Save. The choice persists in the browser; the box's gateway key is
    per-instance, billed to your plan/wallet, and revoked when the box
-   terminates.
+   terminates. The studio's BYOK OpenCode runtime then generates with umans
+   models (the `opencode-cli` from `run.runtimes` does the work).
 
 ## Zero-touch path A — the same-origin seed page (umans platform)
 
@@ -74,14 +82,16 @@ box owner behind the umans session. No vendor files are touched.
 
 ## Zero-touch path B — `OD_BYOK_*` upstream (the durable fix)
 
-The contribution to `nexu-io/open-design`: the daemon reads
+The contribution to `nexu-io/open-design`, in two parts: (1) the daemon reads
 `OD_BYOK_PROTOCOL` / `OD_BYOK_BASE_URL` / `OD_BYOK_API_KEY` /
 `OD_BYOK_MODEL` and uses them as the default chat provider when the browser
 hasn't configured one, plus a `GET /api/byok-defaults` so the web UI can show
 "managed by host environment" (the key never leaves the daemon — the web
-learns only a tail). Server deployments (umans, Railway, any Docker host)
-then ship fully pre-wired studios with zero browser state. Once released,
-the umans manifest just sets those env keys and path A retires.
+learns only a tail); (2) their Dockerfile ships `opencode-cli` so the image
+can actually generate designs out of the box (today it cannot). Server
+deployments (umans, Railway, any Docker host) then ship fully pre-wired
+studios with zero browser state. Once released, the umans manifest just sets
+those env keys and path A retires.
 
 ## Security posture (unchanged throughout)
 
