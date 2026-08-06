@@ -48,8 +48,11 @@
           "OD_DISABLE_API_AUTH": "1",
           // The studio's /api rejects browser origins it doesn't know;
           // the box's bare host is the front door. ${UMANS_AGENT_NAME}
-          // interpolates to the agent name at launch.
-          "OPEN_DESIGN_ALLOWED_ORIGINS": "https://${UMANS_AGENT_NAME}.agents.umans.ai",
+          // interpolates to the agent name at launch. NOTE: the daemon
+          // reads OD_ALLOWED_ORIGINS (apps/daemon/src/origin-validation.ts) —
+          // the OPEN_DESIGN_* spelling is only upstream's host-side compose
+          // substitution name, not a daemon env var.
+          "OD_ALLOWED_ORIGINS": "https://${UMANS_AGENT_NAME}.agents.umans.ai",
           // The daemon must listen on all container interfaces for the
           // loopback publish to reach it.
           "OD_BIND_HOST": "0.0.0.0"
@@ -110,6 +113,18 @@
           // A login shell so UMANS_API_KEY (exported via /etc/profile.d)
           // is set before Pi starts; on Pi exit the session drops to bash.
           "command": "tmux new-session -A -s pi 'bash -lc \"pi; exec bash\"'",
+          "auth": "umans",
+          "visibility": "private"
+        },
+        {
+          "id": "claude",
+          "label": "Claude Code",
+          "kind": "terminal",
+          "port": 7683,
+          // `umans claude` (not bare `claude`) so the box's gateway wiring
+          // applies: ANTHROPIC_BASE_URL + AUTH_TOKEN from the box config,
+          // plus the umans model ladder.
+          "command": "tmux new-session -A -s claude 'bash -lc \"umans claude; exec bash\"'",
           "auth": "umans",
           "visibility": "private"
         }
