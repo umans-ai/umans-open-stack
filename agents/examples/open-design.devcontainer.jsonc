@@ -80,7 +80,29 @@
             // A directory the vendor daemon's agent scan probes.
             "dest": "/home/open-design/.local/bin/opencode-cli"
           }
-        ]
+        ],
+        // Zero-touch BYOK (until upstream OD_BYOK_* lands): the studio's
+        // provider config lives in the BROWSER's localStorage, so the box
+        // serves a same-origin seed page that writes it once — then the
+        // Open button lands here and the studio opens pre-wired. The page
+        // never overwrites an existing configuration.
+        "seedLocalStorage": {
+          "key": "open-design:config",
+          "value": {
+            "configMigrationVersion": 3,
+            "mode": "daemon",
+            "apiProtocol": "openai",
+            // ${UMANS_GATEWAY_KEY} interpolates to the box's per-instance
+            // gateway key at launch (revoked when the box terminates).
+            "apiKey": "${UMANS_GATEWAY_KEY}",
+            // The /v1 matters: opencode appends /chat/completions.
+            "baseUrl": "https://api.code.umans.ai/v1",
+            "model": "umans-coder",
+            "apiProviderBaseUrl": null,
+            "agentId": "byok-opencode",
+            "onboardingCompleted": true
+          }
+        }
       },
 
       // Agent-specific house-rules lines: appended to the box context
@@ -107,7 +129,10 @@
           "port": 7456,
           "health": "/api/health",
           "auth": "umans",
-          "visibility": "private"
+          "visibility": "private",
+          // The Open button lands on the seed page (writes the BYOK config
+          // on first visit), then it redirects into the studio.
+          "openPath": "/umans-seed"
         },
         {
           "id": "opencode",

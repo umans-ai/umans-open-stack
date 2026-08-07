@@ -70,15 +70,25 @@ opens unconfigured until one of the two zero-touch paths below lands.
    terminates. The studio's BYOK OpenCode runtime then generates with umans
    models (the `opencode-cli` from `run.runtimes` does the work).
 
-## Zero-touch path A — the same-origin seed page (umans platform)
+## Zero-touch path A — the same-origin seed page (shipped on umans)
 
 The umans box serves a tiny host-side page at `/umans-seed` on the studio's
 own origin (same nginx block, same umans session gate). On first visit it
-writes the provider config (base URL, box key, `umans-coder`) into
-`localStorage['open-design:config']` and redirects into the studio, which
-then opens pre-wired. The key exposure is identical to the manual step (it
-lands in the same localStorage entry), and the page is only reachable by the
-box owner behind the umans session. No vendor files are touched.
+writes the provider config (the `/v1` base URL, the box key, `umans-coder`,
+`agentId: byok-opencode`, `onboardingCompleted: true`) into
+`localStorage['open-design:config']` — only when no key is already
+configured — and redirects into the studio, which opens pre-wired. The Open
+button lands there (`openPath` on the manifest's main entry), so the first
+click seeds invisibly and later clicks pass straight through. The key
+exposure is identical to the manual step (it lands in the same localStorage
+entry), the page is only reachable by the box owner behind the umans
+session, and no vendor files are touched. Verified end-to-end in a real
+browser against the real studio: fresh load gates at onboarding; after the
+seed, home opens with umans models ready.
+
+The manifest knobs, reusable by any app with browser-local config:
+`run.seedLocalStorage` (key + value template with `${UMANS_AGENT_NAME}` /
+`${UMANS_GATEWAY_KEY}` interpolation) and the entry's `openPath`.
 
 ## Zero-touch path B — `OD_BYOK_*` upstream (the durable fix)
 
