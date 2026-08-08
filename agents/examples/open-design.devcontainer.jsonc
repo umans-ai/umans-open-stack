@@ -107,7 +107,11 @@
             "model": "umans-coder",
             "apiProviderBaseUrl": null,
             "agentId": "byok-opencode",
-            "onboardingCompleted": true
+            "onboardingCompleted": true,
+            // Privacy-conservative default on our boxes: vendor analytics
+            // off until the user opts in (Settings → Privacy).
+            "telemetry": { "metrics": false, "content": false },
+            "privacyDecisionAt": 1786200000000
           }
         }
       },
