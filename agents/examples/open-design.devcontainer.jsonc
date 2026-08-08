@@ -14,7 +14,7 @@
 {
   // Kept for forward-compat with the devcontainer consumption roadmap;
   // the pilot's runtime image is the `run.image` below (the same one).
-  "image": "ghcr.io/nexu-io/od:latest",
+  "image": "ghcr.io/nexu-io/od:0.16.1",
 
   "customizations": {
     "umans": {
@@ -40,7 +40,14 @@
       // renders a hardened docker-compose (read-only root, tmpfs, no-new-
       // privileges, mem/pids caps) + a systemd unit from this block.
       "run": {
-        "image": "ghcr.io/nexu-io/od:latest",
+        // Pinned, never `latest`: the 0.17+ dev channel (what :latest
+        // tracks) gates Home behind a mandatory Open Design Cloud sign-in —
+        // hostile to self-hosted boxes (it broke this pilot mid-flight when
+        // a recreate pulled it). 0.16.1 is the last release with the
+        // self-hostable welcome (Local agent / BYOK, no forced account).
+        // See playbooks/open-design.md; unpin when upstream adds a
+        // self-hosted flag.
+        "image": "ghcr.io/nexu-io/od:0.16.1",
         "env": {
           // The umans agent-proxy is the auth perimeter (it validates the
           // umans session before any traffic reaches the box). Upstream

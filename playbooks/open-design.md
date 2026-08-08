@@ -56,6 +56,18 @@ and CLI env to `/app/.od/app-config.json`, but never the chat key. There is
 no `OD_BYOK_*` env hook today (we checked all of them). So a fresh studio
 opens unconfigured until one of the two zero-touch paths below lands.
 
+## Gotcha 4 — `:latest` is a moving, cloud-gated target
+
+The dev channel that `ghcr.io/nexu-io/od:latest` tracks changed onboarding
+mid-pilot: current builds open with a mandatory "Sign in to Open Design"
+cloud-account step before Local/BYOK are even offered — wrong for a
+self-hosted box (and it arrived between two recreates of the same agent,
+which is how we noticed). The umans manifest pins
+`ghcr.io/nexu-io/od:0.16.1`, the last release whose welcome offers Local
+agent / BYOK without a forced account, and upgrades become deliberate,
+reviewed manifest bumps. (Raised upstream — see the issue linked below.)
+When a first-class self-hosted flag lands, unpin and drop the seed page.
+
 ## Wiring umans inference manually (today, 30 seconds, once)
 
 1. Open the studio → Settings → API providers → custom provider.
