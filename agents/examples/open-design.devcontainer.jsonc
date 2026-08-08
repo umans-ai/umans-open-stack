@@ -48,6 +48,10 @@
         // See playbooks/open-design.md; unpin when upstream adds a
         // self-hosted flag.
         "image": "ghcr.io/nexu-io/od:0.16.1",
+        // The studio daemon is slim but opencode runs inside the same
+        // container for generations — 512m OOM-killed it mid-run.
+        // 1536m leaves headroom on a medium box.
+        "memory": "1536m",
         "env": {
           // The umans agent-proxy is the auth perimeter (it validates the
           // umans session before any traffic reaches the box). Upstream
@@ -64,11 +68,12 @@
           // loopback publish to reach it.
           "OD_BIND_HOST": "0.0.0.0",
           // opencode's writable dirs: the vendor image's home is read-only
-          // under the hardened compose, so XDG points at the writable tmpfs.
-          "XDG_CONFIG_HOME": "/tmp/xdg/config",
-          "XDG_DATA_HOME": "/tmp/xdg/data",
-          "XDG_CACHE_HOME": "/tmp/xdg/cache",
-          "XDG_STATE_HOME": "/tmp/xdg/state"
+          // under the hardened compose, so XDG points at a shared volume the
+          // installer seeds (opencode's umans provider auth lands there).
+          "XDG_CONFIG_HOME": "/home/open-design/.xdg/config",
+          "XDG_DATA_HOME": "/home/open-design/.xdg/data",
+          "XDG_CACHE_HOME": "/home/open-design/.xdg/cache",
+          "XDG_STATE_HOME": "/home/open-design/.xdg/state"
         },
         // Studio state (projects, settings, your BYOK choice) survives
         // restarts here. A box recreate starts fresh, like every box.
