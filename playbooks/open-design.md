@@ -1,5 +1,15 @@
 # Open Design on umans
 
+> **Status (2026-08-10): operator preview.** Launchable by umans operators
+> from the cloud-agents catalogue; GA after the preview validates. Working:
+> the studio pre-wired to umans models (seed page), opencode-cli in the
+> container (pinned + sha256-verified), the pinned self-hostable image
+> (0.16.1). Known gaps: the opencode sibling entry on no-repo boxes has an
+> empty project picker; one wrapper regression is under review on the
+> platform side. Upstream: PR #6625 (BYOK env defaults, approved) and issue
+> #6640 (self-hosted gate bypass) will let this integration drop its
+> temporary pieces.
+
 [Open Design](https://github.com/nexu-io/open-design) — the open-source design
 studio (prototypes, slides, images, video) — running as a umans cloud agent,
 wired to umans inference. This page is the integration contract: what runs
