@@ -73,7 +73,13 @@
           "XDG_CONFIG_HOME": "/home/open-design/.xdg/config",
           "XDG_DATA_HOME": "/home/open-design/.xdg/data",
           "XDG_CACHE_HOME": "/home/open-design/.xdg/cache",
-          "XDG_STATE_HOME": "/home/open-design/.xdg/state"
+          "XDG_STATE_HOME": "/home/open-design/.xdg/state",
+          // The daemon's agent scan resolves its detection home from
+          // os.homedir(); the app runs as the box's agent uid (whose
+          // image home is /home/node), so without this override the scan
+          // finds no runtimes ("BYOK API runs require OpenCode"). Pin the
+          // detection home to the vendor home (the runtime volume mount).
+          "OD_AGENT_HOME": "/home/open-design"
         },
         // Studio state (projects, settings, your BYOK choice) survives
         // restarts here. A box recreate starts fresh, like every box.
