@@ -78,6 +78,13 @@
         // Studio state (projects, settings, your BYOK choice) survives
         // restarts here. A box recreate starts fresh, like every box.
         "volume": "open_design_data:/app/.od",
+        // The box's project dir (the pre-cloned repo when exactly one
+        // exists, else ~/workspace) mounts at /workspace, and the studio's
+        // default project is pointed at it at bring-up — generations land
+        // in the same folder the box's opencode/terminal entries edit.
+        // The app runs as the box's agent uid so files stay agent-owned
+        // on the host.
+        "workspaceMount": { "containerPath": "/workspace" },
         // The vendor image ships NO agent binaries (its design runs fail
         // AGENT_UNAVAILABLE without one). Install opencode-cli — the runtime
         // behind the studio's BYOK OpenCode agent — pinned + sha256-verified.

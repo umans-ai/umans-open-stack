@@ -1,14 +1,15 @@
 # Open Design on umans
 
-> **Status (2026-08-10): operator preview.** Launchable by umans operators
+> **Status (2026-08-11): operator preview.** Launchable by umans operators
 > from the cloud-agents catalogue; GA after the preview validates. Working:
 > the studio pre-wired to umans models (seed page), opencode-cli in the
 > container (pinned + sha256-verified), the pinned self-hostable image
-> (0.16.1). Known gaps: the opencode sibling entry on no-repo boxes has an
-> empty project picker; one wrapper regression is under review on the
-> platform side. Upstream: PR #6625 (BYOK env defaults, approved) and issue
-> #6640 (self-hosted gate bypass) will let this integration drop its
-> temporary pieces.
+> (0.16.1), and the shared workspace — the studio's default project roots
+> at the box's project dir (`workspaceMount`, imported via the daemon's
+> folder-import API at bring-up), so generations land in the same folder
+> the opencode/terminal/Pi/Claude entries edit. Upstream: PR #6625 (BYOK
+> env defaults, approved) and issue #6640 (self-hosted gate bypass) will
+> let this integration drop its temporary pieces.
 
 [Open Design](https://github.com/nexu-io/open-design) — the open-source design
 studio (prototypes, slides, images, video) — running as a umans cloud agent,
@@ -124,6 +125,21 @@ can actually generate designs out of the box (today it cannot). Server
 deployments (umans, Railway, any Docker host) then ship fully pre-wired
 studios with zero browser state. Once released, the umans manifest just sets
 those env keys and path A retires.
+
+## The shared workspace (platform RC-4)
+
+The box resolves ONE project dir at boot — the single directory under
+`~/workspace` (a pre-cloned repo), else `~/workspace` itself — and every
+entry opens on it: opencode, the terminal, Pi, Claude Code, and the
+studio. The manifest's `run.workspaceMount` bind-mounts that dir at
+`/workspace` in the container, and a bring-up oneshot imports it as the
+studio's default project through the daemon's folder-import API
+(`POST /api/import/folder`, the `baseDir` model — no upstream change
+needed; verified against `od:0.16.1`). Generations write to the mounted
+folder, so the box's other surfaces see and edit the same files. The app
+runs as the box's `agent` uid (resolved per boot, never assumed) and the
+runtime-init service chowns the named volumes to match, so files the
+studio writes are `agent`-owned on the host — no ACL gymnastics.
 
 ## Security posture (unchanged throughout)
 
