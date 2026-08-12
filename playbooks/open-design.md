@@ -1,7 +1,7 @@
 # Open Design on umans
 
-> **Status (2026-08-11): operator preview.** Launchable by umans operators
-> from the cloud-agents catalogue; GA after the preview validates. Working:
+> **Status (2026-08-11): generally available.** Launchable by everyone
+> from the cloud-agents catalogue. Working:
 > the studio pre-wired to umans models (seed page), opencode-cli in the
 > container (pinned + sha256-verified), the pinned self-hostable image
 > (0.16.1), and the shared workspace — the studio's default project roots
