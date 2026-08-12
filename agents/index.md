@@ -6,7 +6,7 @@ repo you can read, fork, and launch.
 Cloud agents are in early access. A row can be listed here before it is launchable, so
 people can find the repo and follow along. Open Design is generally available —
 launchable by everyone (see its
-[example manifest](examples/open-design.devcontainer.jsonc)).
+[example manifest](manifests/open-design.devcontainer.jsonc)).
 
 | Agent | By | Repo | Main surface | Maturity |
 |---|---|---|---|---|

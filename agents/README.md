@@ -22,8 +22,8 @@ The umans block adds five things on top of a standard devcontainer:
 - **attribution** is who made the agent.
 
 See [reference.md](reference.md) for the field-by-field reference, and
-[examples/opencode.devcontainer.jsonc](examples/opencode.devcontainer.jsonc) for a worked,
-commented example.
+[manifests/opencode.devcontainer.jsonc](manifests/opencode.devcontainer.jsonc) for a worked,
+commented declaration.
 
 ## Author one
 
@@ -41,9 +41,8 @@ what the agent does, and which surface is `main`.
 
 ## Where this is today
 
-Cloud agents are in early access. opencode is the live, launchable harness today, and
-[Open Design](https://github.com/nexu-io/open-design) is in an operator preview (it
-launches for umans operators while we validate it — see
-[examples/open-design.devcontainer.jsonc](examples/open-design.devcontainer.jsonc) for
-the first `run`-block agent: one published image, four entries). If your agent is not
+Cloud agents are in early access. opencode and
+[Open Design](https://github.com/nexu-io/open-design) are both launchable today (see
+[manifests/open-design.devcontainer.jsonc](manifests/open-design.devcontainer.jsonc) for
+the first `run`-block agent: one published image, five entries). If your agent is not
 launchable yet, the index still lists it so people can find the repo and follow along.

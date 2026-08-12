@@ -48,3 +48,31 @@ Each entry is one named, exposed surface.
 Routing: the bare subdomain opens the `main` entry; named entries are reachable at their own
 subdomain. Every entry sits behind the umans session by default, so an app can read the
 signed-in user without implementing its own login.
+
+## run (container agents)
+
+For `target: "container"` agents the `run` block is the bring-up recipe: one published
+image, started hardened (read-only root, no-new-privileges, memory cap, loopback publish)
+by the platform's compose renderer.
+
+| Field | Type | Notes |
+|---|---|---|
+| `image` | string | The published image to run. Pin a tag, never `latest` — upgrades become deliberate, reviewed manifest bumps. |
+| `env` | object | Container env. `${UMANS_AGENT_NAME}` interpolates to the box's agent name. |
+| `volume` | string | One named volume as `name:/container/path` — survives restarts; a box recreate starts fresh. |
+| `memory` | string | Compose memory cap (e.g. `512m`, `1536m`). Default `512m`; an agent running a CLI runtime inside wants real headroom — under-capping shows up as SIGKILL mid-run. |
+| `runtimes` | list | Pinned, sha256-verified binaries installed by an init service before the app starts. Each: `name`, `url`, `sha256`, `archivePath` (the file inside the tarball), `dest` (absolute install path). Max 4. |
+| `workspaceMount` | object | `{ "containerPath": "/workspace" }` — the box's project dir (the pre-cloned repo when exactly one exists, else `~/workspace`) bind-mounts there, the app runs as the box's agent uid so files stay agent-owned on the host, and a bring-up oneshot points the app's default project at the mount when the app supports an external root (folder-import/`baseDir` model). |
+| `seedLocalStorage` | object | Zero-touch config for apps whose settings live in browser localStorage: `{ "key", "value", "path" }` — the box serves a tiny same-origin seed page (at `path`, default `/umans-seed`) that merges `value` into the stored JSON once (user edits win), then redirects into the app. `${UMANS_AGENT_NAME}` and `${UMANS_GATEWAY_KEY}` interpolate in string values. |
+
+## notes
+
+`notes` is a list of agent-specific house-rules lines (setup steps the agent needs before
+it's useful) appended to the box briefing every runtime reads. Keep them short and
+factual — they load in every session on the box.
+
+## A full container agent
+
+[manifests/open-design.devcontainer.jsonc](manifests/open-design.devcontainer.jsonc) is the
+worked `run`-block declaration: one published image, five entries, a pinned runtime, the
+workspace mount, and the localStorage seed — with the gotchas commented inline.

@@ -53,7 +53,7 @@ runtime) into the container, pinned and sha256-verified, mounted where the
 daemon's agent scan probes (`/home/open-design/.local/bin`), with opencode's
 XDG dirs pointed at the writable tmpfs (`XDG_*_HOME=/tmp/xdg/*`). The umans
 manifest does this for you via the `run.runtimes` block — see the
-[example manifest](../agents/examples/open-design.devcontainer.jsonc).
+[example manifest](../agents/manifests/open-design.devcontainer.jsonc).
 Proven end-to-end: a `byok-opencode` run against the umans gateway produced a
 real artifact. Mounting the *host's* baked CLIs in is deliberately avoided —
 it would hand the vendor image the host's toolchain and credentials for no
@@ -155,5 +155,5 @@ studio writes are `agent`-owned on the host — no ACL gymnastics.
 ## Files
 
 - Cloud-agent manifest:
-  [../agents/examples/open-design.devcontainer.jsonc](../agents/examples/open-design.devcontainer.jsonc)
+  [../agents/manifests/open-design.devcontainer.jsonc](../agents/manifests/open-design.devcontainer.jsonc)
 - Agent index row: [../agents/index.md](../agents/index.md)
