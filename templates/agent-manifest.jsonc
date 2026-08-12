@@ -3,7 +3,7 @@
 //
 // A manifest is a standard devcontainer. Generic devcontainer tools read the
 // top level; umans reads "customizations.umans". See ../agents/reference.md
-// for every field, and ../agents/examples/opencode.devcontainer.jsonc for a
+// for every field, and ../agents/manifests/opencode.devcontainer.jsonc for a
 // worked example.
 {
   // Base image to start from, plus any devcontainer features and lifecycle
