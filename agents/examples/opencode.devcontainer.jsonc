@@ -1,10 +1,10 @@
 // Worked example: the opencode reference manifest.
 //
-// This is the first-party config behind the browser IDE you get today. It is
-// the simplest real manifest: one web entry as the front door, plus a
-// terminal. Use it as a shape to copy. Community agents usually set
-// "target": "container" (see ../reference.md); opencode runs first-party on
-// the box, so it uses "host".
+// This is the first-party config behind the browser IDE you get today: one
+// web entry as the front door, plus the terminal / Pi / Claude Code
+// siblings every box ships. Use it as a shape to copy. Community agents
+// usually set "target": "container" (see ../reference.md); opencode runs
+// first-party on the box, so it uses "host".
 //
 // A manifest is a standard devcontainer. Generic devcontainer tools read the
 // top level and ignore "customizations.umans"; umans reads the umans block.
@@ -46,6 +46,30 @@
           "label": "Terminal",
           "kind": "terminal",
           "command": "tmux new -A -s main",
+          // The baked ttyd listens here; the proxy forwards 7681-<name>.
+          "port": 7681,
+          "auth": "umans",
+          "visibility": "private"
+        },
+        {
+          "id": "pi",
+          "label": "Pi (CLI)",
+          "kind": "terminal",
+          // A login shell so UMANS_API_KEY is exported before Pi starts;
+          // on Pi exit the session drops to bash rather than closing.
+          "command": "tmux new-session -A -s pi 'bash -lc \"pi; exec bash\"'",
+          "port": 7682,
+          "auth": "umans",
+          "visibility": "private"
+        },
+        {
+          "id": "claude",
+          "label": "Claude Code",
+          "kind": "terminal",
+          // `umans claude` (not bare `claude`) carries the box's gateway
+          // wiring: base URL + token + the umans model ladder.
+          "command": "tmux new-session -A -s claude 'bash -lc \"umans claude; exec bash\"'",
+          "port": 7683,
           "auth": "umans",
           "visibility": "private"
         }
